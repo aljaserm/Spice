@@ -2,28 +2,28 @@
 @using Spice.Extensions
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <br />
-<h2 class="text-info">Create Sub Category</h2>
+<h2 class="text-info">Edit Sub Category</h2>
 <br />
 
 <partial name="_StatusMessage" model="Model.StatusMsg" />
 
 <div class="border backgroundWhite row">
     <div class="col-8 border-right">
-        <form asp-action="Create">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="SubCategory.CategoryId" />
+            <input type="hidden" asp-for="SubCategory.Id" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group row">
                 <div class="col-3">
                     <label asp-for="SubCategory.CategoryId" class="col-form-label"></label>
                 </div>
                 <div class="col-5">
-                    <select id="Categorylistddl" asp-for="SubCategory.CategoryId" asp-items="Model.lstCategory.ToSelectListItem(Model.SubCategory.CategoryId)" class="form-control">
-                        <option value=""></option>
-                    </select>
+                    <select id="Categorylistddl" asp-for="SubCategory.CategoryId" disabled asp-items="Model.lstCategory.ToSelectListItem(Model.SubCategory.CategoryId)" class="form-control"></select>
                 </div>
             </div>
             <div class="form-group row">
@@ -31,13 +31,13 @@
                     <label asp-for="SubCategory.Name" class="col-form-label"></label>
                 </div>
                 <div class="col-5">
-                    <input id="scName" asp-for="SubCategory.Name" class="form-control" />
+                    <input asp-for="SubCategory.Name" class="form-control" />
                 </div>
                 <span asp-validation-for="SubCategory.Name" class="text-danger"></span>
             </div>
             <div class="form-group row">
                 <div class="col-5 offset-3">
-                    <partial name="_CreateAndBackToListButton" />
+                    <partial name="_EditAndBackToListButton" model="Model.SubCategory.Id" />
                 </div>
             </div>
         </form>
@@ -62,7 +62,6 @@
 
     <script>
         function updateSubCategoryList() {
-            debugger;
             var categorySelected = document.getElementById("Categorylistddl").value;
             $list = $('#SubCategoryList');
             $.ajax({
@@ -80,11 +79,7 @@
                 }
             });
         }
-        //$(document).ready(function () {
-        //    updateSubCategoryList();
-        //});
-        $("#Categorylistddl").on("change", function () {
-            $("#scName").val("");
+        $(document).ready(function () {
             updateSubCategoryList();
         });
     </script>

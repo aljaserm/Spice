@@ -1,0 +1,94 @@
+﻿@model Spice.ViewModels.MenuVM
+@using Spice.Extensions
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-info">Create Menu Item</h2>
+<br />
+
+<form method="post" enctype="multipart/form-data">
+    <div class="border backgroundWhite">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Menu.Name" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Menu.Name" class="form-control" />
+            </div>
+            <span asp-validation-for="Menu.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Menu.Descrption" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                @*<input asp-for="Menu.Descrption" class="form-control" />*@
+                @Html.TextAreaFor(m => m.Menu.Descrption)
+            </div>
+            <span asp-validation-for="Menu.Descrption" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Menu.Price" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input asp-for="Menu.Price" class="form-control" />
+            </div>
+            <span asp-validation-for="Menu.Price" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Menu.CategoryId" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <select asp-for="@Model.Menu.CategoryId" id="CategoryId" asp-items="Model.lstCategory.ToSelectListItem(Model.Menu.CategoryId)" class="form-control">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Menu.SubCategoryId" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <select asp-for="@Model.Menu.SubCategoryId" id="SubCategoryId" name="SubCategoryId" asp-items="@(new SelectList(string.Empty,"Id","name"))" class="form-control">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Menu.Img" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <input type="file" name="files" multiple class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Menu.SpicyLevel" class="col-form-label"></label>
+            </div>
+            <div class="col-5">
+                <select asp-for="Menu.SpicyLevel" asp-items="Html.GetEnumSelectList<Menu.ESpicy>()" class="form-control">
+                    <option value=""></option>
+                </select>"
+            </div>
+            <span asp-validation-for="Menu.SpicyLevel" class="text-danger"></span>
+        </div>
+        <div class="form-group row">
+            <div class="col-5 offset-2">
+                <partial name="_CreateAndBackToListButton" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
