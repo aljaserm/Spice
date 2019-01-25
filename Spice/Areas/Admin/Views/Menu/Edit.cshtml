@@ -1,0 +1,141 @@
+﻿@model Spice.ViewModels.MenuVM
+@using Spice.Extensions
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-info">Edit Menu</h2>
+<br />
+
+<form method="post" asp-action="Create" enctype="multipart/form-data">
+    <div class="border backgroundWhite row">
+        <input type="hidden" asp-for="Menu.Id" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Menu.Name" class="col-form-label"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Menu.Name" class="form-control" />
+                </div>
+                <span asp-validation-for="Menu.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Menu.Descrption" class="col-form-label"></label>
+                </div>
+                <div class="col-8">
+                    @Html.TextAreaFor(m => m.Menu.Descrption)
+                </div>
+                <span asp-validation-for="Menu.Descrption" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Menu.Price" class="col-form-label"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Menu.Price" class="form-control" />
+                </div>
+                <span asp-validation-for="Menu.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Menu.Img" class="col-form-label"></label>
+                </div>
+                <div class="col-8">
+                    <input type="file" name="files" multiple class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Menu.CategoryId" class="col-form-label"></label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="@Model.Menu.CategoryId" id="CategoryId" asp-items="Model.lstCategory.ToSelectListItem(Model.Menu.CategoryId)" class="form-control">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Menu.SubCategoryId" class="col-form-label"></label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="@Model.Menu.SubCategoryId" id="SubCategoryId" name="SubCategoryId" asp-items="@(new SelectList(string.Empty,"Id","name"))" class="form-control">
+                        <option value=""></option>
+                    </select>
+                    <input type="hidden" asp-for="@Model.Menu.SubCategoryId" id="HiddenSubCategoryId">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Menu.SpicyLevel" class="col-form-label"></label>
+                </div>
+                <div class="col-8">
+                    <select asp-for="Menu.SpicyLevel" asp-items="Html.GetEnumSelectList<Menu.ESpicy>()" class="form-control"></select>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-3 offset-1">
+            <img src="@Model.Menu.Img" width="100%" style="border-radius:5px;border: 1px solid #bbb9b9;" />
+        </div>
+
+        <div class="col-8">
+            <div class="col-8 offset-4">
+                <partial name="_EditAndBackToListButton" model="Model.Menu.Id" />
+            </div>
+        </div>
+
+
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: "lists",
+            menubar: 'file edit format'
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            getSubs();
+            $('#CategoryId').change(function () {
+                getSubs();
+            });
+        });
+function getSubs() {
+            var url = '@Url.Content("~/")' + "Admin/SubCategory/GetSubsCategory";
+            var ddlsoruce = '#CategoryId';
+            $.getJSON(url, { id: $(ddlsoruce).val() }, function (data) {
+                var items = '';
+                $('#SubCategoryId').empty();
+                //items += "<option value=' +" "+ '>" + + "</option>";
+                //$.each(data, function (i, subcategory) {
+                //    items += "<option value='" + subcategory.value + "'>" + subcategory.text + "</option>";
+                //});
+                //$('#SubCategoryId').html(items);
+                $('#SubCategoryId').append('<option value=' + "" + '>' + "" + '</option>');
+                $.each(data, function (index, value) {
+                    $('#SubCategoryId').append('<option value=' + value.value + '>' + value.text + '</option>');
+                })
+                var SCID = $('#HiddenSubCategoryId').val();
+                $('#SubCategoryId').val(SCID);
+            })
+        }
+    </script>
+
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

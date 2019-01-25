@@ -77,7 +77,7 @@
             <div class="col-5">
                 <select asp-for="Menu.SpicyLevel" asp-items="Html.GetEnumSelectList<Menu.ESpicy>()" class="form-control">
                     <option value=""></option>
-                </select>"
+                </select>
             </div>
             <span asp-validation-for="Menu.SpicyLevel" class="text-danger"></span>
         </div>
@@ -91,4 +91,39 @@
 
 @section Scripts{
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: "lists",
+            menubar:'file edit format'
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //getSubs();
+            $("#CategoryId").change(function () {
+                getSubs();
+            });
+        });
+
+        function getSubs() {
+            var url = '@Url.Content("~/")' + "Admin/SubCategory/GetSubsCategory";
+            var ddlsoruce = '#CategoryId';
+            $.getJSON(url, { id: $(ddlsoruce).val() }, function (data) {
+                var items = '';
+                $('#SubCategoryId').empty();
+                //items += "<option value=' +" "+ '>" + + "</option>";
+                //$.each(data, function (i, subcategory) {
+                //    items += "<option value='" + subcategory.value + "'>" + subcategory.text + "</option>";
+                //});
+                //$('#SubCategoryId').html(items);
+                $('#SubCategoryId').append('<option value=' + "" + '>' + "" + '</option>');
+                $.each(data, function (index, value) {
+                    $('#SubCategoryId').append('<option value=' + value.value + '>' + value.text + '</option>');
+                })
+    
+            })
+        }
+    </script>
 }
