@@ -1,8 +1,73 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Spice.ViewModels.IndexVM
+
+<br />
+
+@if (Model.coupons.ToList().Count > 0)
+{
+    <div class="border">
+        <div class="carousel" data-ride="carousel" data-interval="2500">
+            @for (int i = 0; i < Model.coupons.Count(); ++i)
+            {
+                if (i == 0)
+                {
+                    <div class="carousel-item active">
+                        @{
+                            var base64 = Convert.ToBase64String(Model.coupons.ToList()[i].img);
+                            var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                        }
+                        <img src="@imgsrc" height="50px" class="d-block w-100" />
+                    </div>
+                }
+                else
+                {
+                    <div class="carousel-item">
+                        @{
+                            var base64 = Convert.ToBase64String(Model.coupons.ToList()[i].img);
+                            var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                        }
+                        <img src="@imgsrc" height="50px" class="d-block w-100" />
+                    </div>
+                }
+            }
+        </div>
+    </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<br /><br />
+<div class="backgroundWhite container">
+    <ul id="Menu-Filters" class="menuFilterList list-inline text-center">
+        <li class="filter active btn btn-secondary ml-1 mr-1" data-filter=".menuRestaurant">Show All</li>
+        @foreach (var c in Model.categories)
+        {
+        <li class="ml-1 mr-1" data-filter=".@c.Name.Replace(" ",string.Empty)">@c.Name</li>
+        }
+    </ul>
+
+    @foreach(var category in Model.categories)
+    {
+        <div class="row" id="menu-wraper">
+            <partial name="_ThumbnailAreaPartial" model="@Model.menus.Where(u=>u.Category.Name.Equals(category.Name))" />
+        </div>
+    }
 </div>
+@section Scripts{ 
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script>
+        var post = $('.post');
+        (function ($) {
+            $('#Menu-Filters li').click(function () {
+                $("#Menu-Filters li").removeClass('active btn btn-secondary');
+                $(this).addClass('active btn btn-secondary');
+                var selectedCategory = $(this).data("filter");
+                $(".menuRestaurant").fadeOut();
+                setTimeout(function () {
+                    $(selectedCategory).slideDown();
+                }, 300);
+            });
+        })(jQuery);
+    </script>
+}
+
+
