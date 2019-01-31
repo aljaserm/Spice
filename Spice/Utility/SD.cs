@@ -12,5 +12,6 @@ namespace Spice.Utility
         public const String Kitchen = "Kitchen";
         public const String FrontDesk = "FrontDesk";
         public const String Customer = "Customer";
+        public const String CartCountSession = "ssCartCount";
     }
 }
