@@ -11,6 +11,8 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <link rel="stylesheet" href="~/css/jquery-ui.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css"/>
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
@@ -19,6 +21,8 @@
               crossorigin="anonymous"
               integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <link rel="stylesheet" href="~/css/jquery-ui.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -56,7 +60,7 @@
                         @if (hca.HttpContext.Session.GetInt32(@SD.CartCountSession) != null)
                         {
                             <li style="color:white">
-                                <a href="#" class="nav-link">
+                                <a href="/Customer/Cart" class="nav-link">
                                     @{
                                         var count = hca.HttpContext.Session.GetInt32(@SD.CartCountSession);
                                     }
@@ -68,7 +72,7 @@
                         {
 
                             <li style="color:white">
-                                <a href="#" class="nav-link">
+                                <a href="/Customer/Cart" class="nav-link">
                                     <i class="fas fa-shopping-cart"></i> &nbsp; (0)
                                 </a>
                             </li>
@@ -97,6 +101,7 @@
 
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="~/js/jquery-ui.js"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=af4djgrspr91j250pytk3gqr976ti7n3j6l2uvm0gj5qjqwc"></script>
@@ -113,6 +118,7 @@
                 crossorigin="anonymous"
                 integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
         </script>
+        <script src="~/js/jquery-ui.js"></script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
