@@ -57,6 +57,35 @@
 
                             </li>
                         }
+
+                        @if (User.IsInRole(SD.Manager) || User.IsInRole(SD.Customer) || User.IsInRole(SD.FrontDesk) || User.IsInRole(SD.Kitchen))
+                        {
+                            <li class="nav-item">
+                                <a asp-area="Customer" asp-controller="Orders" asp-action="OrderHistory" class="nav-link">
+                                    Order History
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole(SD.FrontDesk) || User.IsInRole(SD.Kitchen) || User.IsInRole(SD.Manager))
+                        {
+                            <li class="nav-item dropdown text-white-50">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Order
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
+                                    @if (User.IsInRole(SD.Kitchen) || User.IsInRole(SD.Manager))
+                                    {
+                                        <a class="dropdown-item" asp-action="ManageOrder" asp-controller="Orders" asp-area="Customer">Manage Order</a>
+                                    }
+                                    @if (User.IsInRole(SD.FrontDesk) || User.IsInRole(SD.Manager))
+                                    {
+                                        <a class="dropdown-item" asp-action="OrderPickup" asp-controller="Orders" asp-area="Customer">Order Pickup</a>
+                                    }
+                                </div>
+
+                            </li>
+                        }
+
                         @if (hca.HttpContext.Session.GetInt32(@SD.CartCountSession) != null)
                         {
                             <li style="color:white">

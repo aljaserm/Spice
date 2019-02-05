@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spice", "Spice\Spice.csproj", "{D2FF2DDA-1A8B-43B1-91C3-77F2C4BE2EC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spice", "Spice\Spice.csproj", "{D2FF2DDA-1A8B-43B1-91C3-77F2C4BE2EC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

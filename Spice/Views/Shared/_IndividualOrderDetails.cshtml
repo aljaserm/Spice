@@ -1,0 +1,108 @@
+﻿@model Spice.ViewModels.OrderDeatilsVM
+@using Spice.Utility
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<form asp-action="OrderPickup" asp-controller="Order" asp-route-orderId="@Model.orders.Id" method="post">
+    <div class="container row border ml-1 backgroundWhiteBorder10Padding" style="width:100%">
+        <div class="col-lg-8 col-12" style="border-right:1px solid #bbb9b9">
+            <br />
+            <input type="hidden" asp-for="orders.Id" />
+
+            <div class="form-group row">
+                <div class="col-3">
+                    <label>Name</label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="orders.PickupName" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="orders.ApplicationUser.Email"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="orders.ApplicationUser.Email" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="orders.ApplicationUser.PhoneNumber"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="orders.ApplicationUser.PhoneNumber" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="orders.OrderTotal"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="orders.OrderTotal" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="orders.OrderDate"></label>
+                </div>
+                <div class="col-9">
+                    <input value="@Model.orders.PicupTime.ToShortDateString() @Model.orders.PicupTime.ToShortTimeString()" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="orders.Comments"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="orders.Comments" disabled class="form-control" />
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-4 col-12">
+            <h4 class="d-flex justify-content-between align-content-center mb-3">
+                <span class="text-muted">Order ID: </span>
+                <span class="badge badge-secondary badge-pill">@Model.orders.Id</span>
+            </h4>
+            <ul class="list-group mb-3">
+                @foreach (var details in Model.lstOrderDetails)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <h6 class="my-0">@details.Name</h6>
+                            <small class="text-muted">Quantity : @details.Count</small>
+                        </div>
+                        <span class="text-muted">@(details.Price * details.Count)</span>
+                    </li>
+                }
+                @if (Model.orders.CouponCode != null)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div class="text-success">
+                            <h6 class="my-0">Promo Code</h6>
+                            <small>@Model.orders.CouponCode</small>
+                        </div>
+                        <span class="text-success">@(Model.orders.OrderTotalOriginal - Model.orders.OrderTotal)</span>
+                    </li>
+                }
+                <li class="list-group-item d-flex justify-content-between bg-light">
+                    <span class="text-info"> Total (USD)</span>
+                    <strong class="text-info">$@Model.orders.OrderTotal</strong>
+                </li>
+
+            </ul>
+            @if (Model.orders.Status.Equals(SD.OrderReady) && (User.IsInRole(SD.Manager) || User.IsInRole(SD.FrontDesk)))
+            {
+                <button type="submit" class="btn btn-success form-control"><i class="far fa-thumbs-up"></i> Confirm Pickup</button>
+            }
+            else
+            {
+                <button type="submit" disabled class="btn btn-info form-control">@Model.orders.Status</button>
+            }
+        </div>
+
+    </div>
+</form>
