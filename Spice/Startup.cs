@@ -44,9 +44,19 @@ namespace Spice
                 .AddDefaultTokenProviders()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //Adding Facebook Login
+            services.AddAuthentication().AddFacebook(facebookOptions=>
+            {
+                facebookOptions.AppId = "2169174526483848";
+                facebookOptions.AppSecret = "8f780619c27de4c59bf10d06860375de";
+            });
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = "59570142311-tp7fgg2ikp552fkmkn6c06tpj2jq1hvs.apps.googleusercontent.com";
+                googleOptions.ClientSecret = "NGx-xKWX7LFLBjBbLcLmQE0M";
+            });
             services.AddSession(options =>
             {
                 options.Cookie.IsEssential = true;
