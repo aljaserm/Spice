@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
@@ -18,10 +19,12 @@ namespace Spice.Areas.Customer.Controllers
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IEmailSender _es;
         private int PageSize = 2;
-        public OrdersController(ApplicationDbContext db)
+        public OrdersController(ApplicationDbContext db, IEmailSender es)
         {
             _db = db;
+            _es = es;
         }
 
         [Authorize]
@@ -110,6 +113,13 @@ namespace Spice.Areas.Customer.Controllers
             await _db.SaveChangesAsync();
 
             //TODO Email to customer
+            var CIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = CIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var subject = "Spice -- Order " + order.Id + " Ready";
+            var email = _db.Users.Where(u => u.Id == claim.Value).FirstOrDefault();
+            var name = _db.ApplicationUsers.Where(u => u.Id == claim.Value).FirstOrDefault();
+            var body = "Your Order is ready for pick up";
+            await _es.SendEmailAsync(name.Email, subject, body);
             return RedirectToAction(nameof(ManageOrder), order);
         }
 
@@ -119,6 +129,13 @@ namespace Spice.Areas.Customer.Controllers
             Orders order = await _db.Orders.FindAsync(OrderId);
             order.Status = SD.OrderCancel;
             await _db.SaveChangesAsync();
+            var CIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = CIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var subject = "Spice -- Order " + order.Id + " Canceled";
+            var email = _db.Users.Where(u => u.Id == claim.Value).FirstOrDefault();
+            var name = _db.ApplicationUsers.Where(u => u.Id == claim.Value).FirstOrDefault();
+            var body = "Your Order is canceled";
+            await _es.SendEmailAsync(name.Email, subject, body);
             return RedirectToAction(nameof(ManageOrder), order);
         }
 
@@ -223,6 +240,13 @@ namespace Spice.Areas.Customer.Controllers
             Orders order = await _db.Orders.FindAsync(value.orders.Id);
             order.Status = SD.OrderDone;
             await _db.SaveChangesAsync();
+            var CIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = CIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var subject = "Spice -- Order " + order.Id + " Picked";
+            var email = _db.Users.Where(u => u.Id == claim.Value).FirstOrDefault();
+            var name = _db.ApplicationUsers.Where(u => u.Id == claim.Value).FirstOrDefault();
+            var body = "Your Order is picked up";
+            await _es.SendEmailAsync(name.Email, subject, body);
             return RedirectToAction(nameof(OrderPickup), order);
         }
         public IActionResult Index()

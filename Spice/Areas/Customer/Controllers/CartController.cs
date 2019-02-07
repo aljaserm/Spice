@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
@@ -19,11 +20,13 @@ namespace Spice.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IEmailSender _es;
         [BindProperty]
         public OrdersVM ordersVM { get; set; }
-        public CartController(ApplicationDbContext db)
+        public CartController(ApplicationDbContext db, IEmailSender es)
         {
             _db = db;
+            _es = es;
         }
         public async Task<IActionResult> Index()
         {
@@ -176,6 +179,11 @@ namespace Spice.Areas.Customer.Controllers
                 ordersVM.Orders.TransactionId = charge.BalanceTransactionId;
                 if (charge.Status.ToLower() == "succeeded")
                 {
+                    var subject = "Spice -- Order " + ordersVM.Orders.Id+ " Submitted";
+                    var email = _db.Users.Where(u => u.Id == claim.Value).FirstOrDefault();
+                    var name = _db.ApplicationUsers.Where(u => u.Id == claim.Value).FirstOrDefault();
+                    var body = "Dear <b>"+name.Name+"</b><br>Order <b>"+ ordersVM.Orders.Id+"</b> has been submitted successfully<br> We will notify you when your order is ready for pick up.<b>Order Total:</b> $"+ ordersVM.Orders.OrderTotal+ "<br> Thank you for using us<br> Lokking forward to serve next time.<br>Spice Management<br><b>The Spicer The Better</b>";
+                    await _es.SendEmailAsync(name.Email,subject,body);
                     ordersVM.Orders.PaymentStatus = SD.PayementApproved;
                     ordersVM.Orders.Status = SD.OrderSubmitted;
                 }
@@ -190,8 +198,8 @@ namespace Spice.Areas.Customer.Controllers
             }
             await _db.SaveChangesAsync();
             
-            return RedirectToAction(nameof(Index));
-            //return RedirectToAction("Confirm","Order", new { id=ordersVM.Orders.Id});
+            //return RedirectToAction(nameof(Index));
+            return RedirectToAction("Confirm", "Orders", new { id = ordersVM.Orders.Id });
 
         }
 

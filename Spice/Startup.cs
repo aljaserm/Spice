@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spice.Utility;
 using Stripe;
+using Spice.Service;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Spice
 {
@@ -45,6 +47,11 @@ namespace Spice
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailOptions>(Configuration);
+
+            
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //Adding Facebook Login
             services.AddAuthentication().AddFacebook(facebookOptions=>
